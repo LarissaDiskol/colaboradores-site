@@ -1,34 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resultados dos Colaboradores</title>
-  <script>
-    function buscarDados() {
-      const nome = document.getElementById('nome').value.toLowerCase();
-      const sheetID = '1k5I33btCIRveA3CEO7IUcBgiXV5mA5YDXzP93yGFsHY';
-      const sheetURL = `https://spreadsheets.google.com/feeds/list/${sheetID}/1/public/values?alt=json`;
+const nome = 'exemplo'; // Substitua por um nome existente na planilha
+const sheetID = '1k5I33btCIRveA3CEO7IUcBgiXV5mA5YDXzP93yGFsHY'; // Substitua pelo ID da sua planilha
+const sheetURL = `https://spreadsheets.google.com/feeds/list/${1k5I33btCIRveA3CEO7IUcBgiXV5mA5YDXzP93yGFsHY}/1/public/values?alt=json`;
 
-      fetch(sheetURL)
-        .then(response => response.json())
-        .then(data => {
-          const entries = data.feed.entry;
-          let resultados = '';
-          entries.forEach(entry => {
-            if (entry.gsx$nome.$t.toLowerCase() === nome) {
-              resultados += `<p>${entry.gsx$dados.$t}</p>`;
-            }
-          });
-          document.getElementById('resultados').innerHTML = resultados || '<p>Nenhum resultado encontrado.</p>';
-        });
+fetch(sheetURL)
+  .then(response => response.json())
+  .then(data => {
+    const entries = data.feed.entry;
+    let encontrado = false;
+    entries.forEach(entry => {
+      if (entry.gsx$nome.$t.toLowerCase() === nome.toLowerCase()) {
+        console.log('Dados encontrados:', entry.gsx$dados.$t);
+        encontrado = true;
+      }
+    });
+    if (!encontrado) {
+      console.log('Nenhum dado encontrado para o nome:', nome);
     }
-  </script>
-</head>
-<body>
-  <h1>Resultados dos Colaboradores</h1>
-  <input type="text" id="nome" placeholder="Digite seu nome">
-  <button onclick="buscarDados()">Buscar</button>
-  <div id="resultados"></div>
-</body>
-</html>
+  })
+  .catch(error => {
+    console.error('Erro ao buscar dados:', error);
+  });
